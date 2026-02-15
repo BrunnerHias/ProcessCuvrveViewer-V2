@@ -1,0 +1,37 @@
+.data-portal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+  overflow: hidden;
+  gap: 0;
+}
+
+/* ── Left column: filter + data tree ───────────────────────── */
+.dp-left {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+}
+
+/* ── Right column: import top + groups bottom ──────────────── */
+.dp-right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.dp-right-top {
+  flex-shrink: 0;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dp-right-bottom {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}

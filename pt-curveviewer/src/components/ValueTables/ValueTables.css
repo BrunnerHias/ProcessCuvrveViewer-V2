@@ -1,0 +1,487 @@
+/* ============================================================
+   ValueTables — Soft modern glass design
+   ============================================================ */
+
+/* ── Root layout ─────────────────────────────────────────────── */
+.vt-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+/* Toolbar above tables */
+.vt-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.vt-export-combined-btn {
+  padding: 4px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+.vt-export-combined-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* Panels container */
+.vt-panels {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  overflow: hidden;
+  gap: 6px;
+  padding: 6px;
+}
+
+.vt-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.vt-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 36px;
+  border-radius: 14px;
+  background: var(--bg-surface);
+  box-shadow: 0 2px 12px var(--shadow-color);
+  color: var(--text-disabled);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.vt-empty-icon {
+  font-size: 28px;
+  opacity: 0.5;
+}
+
+.vt-divider {
+  width: 1px;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+/* ── Panel (one per table) ───────────────────────────────────── */
+.vt-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  border-radius: 12px;
+  background: var(--bg-surface);
+  box-shadow: 0 2px 16px var(--shadow-color);
+}
+
+/* ── Title bar ───────────────────────────────────────────────── */
+.vt-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  flex-shrink: 0;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+}
+.vt-title-set {
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-secondary) 100%);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+.vt-title-act {
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-secondary) 100%);
+  box-shadow: inset 0 -2px 0 var(--success-text);
+}
+.vt-title-icon {
+  font-size: 15px;
+  opacity: 0.85;
+}
+.vt-title-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--text-secondary);
+}
+.vt-title-badge {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  min-width: 22px;
+  text-align: center;
+}
+.vt-title-act .vt-title-badge {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+/* ── Filter bar ──────────────────────────────────────────────── */
+.vt-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+  flex-shrink: 0;
+}
+
+.vt-filter-icon {
+  font-size: 12px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.vt-filter-input {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 11px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 0;
+}
+
+.vt-filter-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.vt-filter-input::placeholder {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.vt-filter-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.vt-filter-clear:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* ── Scroll container ────────────────────────────────────────── */
+.vt-scroll {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+  padding: 0 0 6px 0;
+}
+
+/* custom thin scrollbar */
+.vt-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.vt-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.vt-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+.vt-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+/* ── Table (flex-column rows) ────────────────────────────────── */
+.vt-table {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Rows (header + body share same flex layout) ─────────────── */
+.vt-header-row,
+.vt-row {
+  display: flex;
+  flex-direction: row;
+}
+
+/* ── Header row (sticky top) ─────────────────────────────────── */
+.vt-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: var(--bg-surface);
+}
+
+/* ── Body row hover ──────────────────────────────────────────── */
+.vt-row {
+  transition: background 0.15s ease;
+  border-radius: 0;
+}
+.vt-row:hover {
+  background: var(--accent-bg);
+}
+
+/* ── Description column — sticky left ────────────────────────── */
+.vt-desc-header,
+.vt-desc-cell {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.vt-header-row .vt-desc-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 5; /* above both sticky-top and sticky-left */
+  background: var(--bg-surface);
+}
+
+.vt-desc-header {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  background: var(--bg-surface);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  position: relative;
+}
+
+/* ── Resize handle (shared for desc + col headers) ───────────── */
+.vt-resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 6;
+  background: transparent;
+  transition: background 0.15s;
+}
+.vt-resize-handle:hover,
+.vt-resize-handle:active {
+  background: var(--accent);
+  opacity: 0.6;
+}
+
+.vt-desc-cell {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 4px 14px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+  /* Allow text wrapping for long descriptions */
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  transition: background 0.15s ease;
+}
+.vt-row:hover > .vt-desc-cell {
+  background: var(--accent-bg);
+}
+.vt-row:nth-child(even) > .vt-desc-cell {
+  background: color-mix(in srgb, var(--bg-secondary) 50%, var(--bg-surface));
+}
+.vt-row:nth-child(even):hover > .vt-desc-cell {
+  background: var(--accent-bg);
+}
+
+/* Clickable description cell → opens detail modal */
+.vt-desc-clickable {
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, padding-left 0.15s ease;
+}
+.vt-desc-clickable:hover {
+  background: var(--accent-bg) !important;
+  color: var(--accent);
+  padding-left: 18px;
+}
+.vt-desc-clickable:active {
+  opacity: 0.8;
+}
+
+/* ── File header cells ───────────────────────────────────────── */
+.vt-file-header {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--border) 20%, transparent);
+  /* Allow wrapping for long file names */
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+.vt-file-header:first-child {
+  border-left: none;
+}
+.vt-file-header.vt-nok-header {
+  background: color-mix(in srgb, var(--danger) 15%, var(--bg-surface));
+  color: var(--danger);
+  font-weight: 700;
+}
+.vt-file-header.vt-ok-header {
+  background: color-mix(in srgb, var(--success) 12%, var(--bg-surface));
+  color: var(--success-text);
+  font-weight: 700;
+}
+
+/* ── Data cells ──────────────────────────────────────────────── */
+.vt-data-cell {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 4px 8px;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 20%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--border) 15%, transparent);
+  /* Allow wrapping for long values */
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  gap: 4px;
+  transition: filter 0.15s ease, background 0.15s ease;
+}
+.vt-data-cell:hover {
+  filter: brightness(1.1);
+}
+
+.vt-row:nth-child(even) > .vt-data-cell:not([style*="background"]) {
+  background: color-mix(in srgb, var(--bg-secondary) 30%, transparent);
+}
+
+.vt-empty-cell {
+  justify-content: center;
+  color: var(--text-disabled);
+  font-style: italic;
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+.vt-nok {
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+.vt-val {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.vt-unit {
+  opacity: 0.55;
+  font-size: 9px;
+  flex-shrink: 0;
+  font-weight: 400;
+}
+
+/* ── Custom modern tooltip ───────────────────────────────────── */
+.vt-tooltip {
+  position: fixed;
+  z-index: 2147483647;
+  transform: translateX(-50%);
+  min-width: 180px;
+  max-width: 340px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg-surface) 85%, transparent);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    0 0 0 1px color-mix(in srgb, var(--border) 20%, transparent);
+  pointer-events: auto;
+  animation: vt-tooltip-in 0.15s ease;
+}
+
+@keyframes vt-tooltip-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.vt-tooltip-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 2px 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.vt-tooltip-row + .vt-tooltip-row {
+  border-top: 1px solid color-mix(in srgb, var(--border) 20%, transparent);
+}
+
+.vt-tooltip-label {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  min-width: 60px;
+}
+
+.vt-tooltip-value {
+  color: var(--text-primary);
+  font-weight: 500;
+  word-break: break-word;
+}

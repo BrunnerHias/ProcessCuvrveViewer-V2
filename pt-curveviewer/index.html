@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pt-curveviewer</title>
+  </head>
+  <body style="background:#12121e;color:#e0e0e0;">
+    <div id="root"><p style="padding:40px;font-family:sans-serif;">Loading PT CurveViewer...</p></div>
+    <script>
+      window.addEventListener('error', function(e) {
+        document.getElementById('root').innerHTML = '<pre style="color:red;padding:20px;white-space:pre-wrap">GLOBAL ERROR:\n' + e.message + '\n' + (e.filename || '') + ':' + (e.lineno || '') + '\n' + (e.error && e.error.stack ? e.error.stack : '') + '</pre>';
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        document.getElementById('root').innerHTML = '<pre style="color:red;padding:20px;white-space:pre-wrap">UNHANDLED PROMISE:\n' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)) + '\n' + (e.reason && e.reason.stack ? e.reason.stack : '') + '</pre>';
+      });
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

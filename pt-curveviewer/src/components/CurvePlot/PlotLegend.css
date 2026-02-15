@@ -1,0 +1,292 @@
+/* ============================================================
+   PlotLegend - Sidebar tree
+   ============================================================ */
+
+/* --- Wrapper with slide animation --- */
+.plot-legend-wrapper {
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+  transition: width 0.25s ease;
+  overflow: visible;
+}
+
+.plot-legend-wrapper.open {
+  width: 280px;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.plot-legend-wrapper.closed {
+  width: 0;
+  min-width: 0;
+  max-width: 0;
+}
+
+/* Toggle button on the sidebar edge */
+.legend-toggle-btn {
+  position: absolute;
+  left: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 48px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.legend-toggle-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.plot-legend {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  overflow: hidden;
+  font-size: 11px;
+}
+
+.legend-header {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.legend-tree {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0;
+}
+
+.legend-empty {
+  padding: 16px 12px;
+  color: var(--text-disabled);
+  font-style: italic;
+  text-align: center;
+}
+
+/* --- Row base --- */
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  min-height: 22px;
+  transition: background 0.1s;
+}
+
+.legend-row:hover {
+  background: var(--overlay-hover);
+}
+
+/* --- Collapse icon --- */
+.collapse-icon {
+  display: inline-flex;
+  width: 14px;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 0.15s;
+  user-select: none;
+}
+
+.collapse-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+.collapse-icon.small {
+  font-size: 9px;
+  width: 12px;
+}
+
+.collapse-icon.tiny {
+  font-size: 8px;
+  width: 10px;
+}
+
+/* --- Group --- */
+.legend-group {
+  margin-bottom: 2px;
+}
+
+.legend-group-header {
+  padding-left: 4px;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.legend-group-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.legend-count {
+  color: var(--text-faint);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+/* --- File --- */
+.legend-file {
+  margin-left: 14px;
+}
+
+.legend-file-header {
+  padding-left: 4px;
+  color: var(--text-secondary);
+}
+
+.legend-file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Channel --- */
+.legend-channel {
+  margin-left: 14px;
+}
+
+.legend-channel-row {
+  padding-left: 4px;
+}
+
+.legend-checkbox {
+  width: 13px;
+  height: 13px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.legend-color-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  border: 1px solid var(--swatch-border);
+}
+
+.legend-color-swatch--clickable {
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+}
+
+.legend-color-swatch--clickable:hover {
+  transform: scale(1.35);
+  border-color: var(--text-primary);
+  box-shadow: 0 0 6px currentColor;
+}
+
+.legend-channel-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-channel);
+}
+
+.legend-channel-name.dimmed {
+  color: var(--text-disabled);
+  text-decoration: line-through;
+}
+
+/* --- Graphic Elements --- */
+.legend-elements {
+  margin-left: 14px;
+}
+
+.legend-element-group {
+  margin-bottom: 1px;
+}
+
+.legend-element-row {
+  padding-left: 4px;
+  color: var(--text-legend-sub);
+  font-size: 10px;
+}
+
+.legend-element-label {
+  font-weight: 500;
+}
+
+.legend-subgroup {
+  margin-left: 14px;
+}
+
+.legend-subelement-row {
+  padding-left: 4px;
+  color: var(--text-legend-item);
+  font-size: 10px;
+}
+
+.legend-subelement-row.clickable:hover {
+  background: var(--overlay-hover-strong);
+}
+
+.legend-subelement-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Individual item rows --- */
+.legend-item-row {
+  padding-left: 18px;
+  margin-left: 14px;
+  color: var(--text-legend-deep);
+  font-size: 10px;
+  min-height: 18px;
+}
+
+.legend-item-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Disabled / dimmed rows --- */
+.legend-row--disabled {
+  opacity: 0.45;
+}
+
+.legend-element-label.dimmed,
+.legend-subelement-name.dimmed,
+.legend-item-name.dimmed {
+  color: var(--text-disabled);
+  text-decoration: line-through;
+}
+
+/* --- Small checkbox for sub-groups --- */
+.legend-checkbox--small {
+  width: 11px;
+  height: 11px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+  cursor: pointer;
+}

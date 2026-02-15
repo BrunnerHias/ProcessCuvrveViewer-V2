@@ -1,0 +1,292 @@
+/* ============================================================
+   GroupPanel — group management with activation checkboxes
+   ============================================================ */
+
+.group-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 13px;
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+.gp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--bg-input);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.gp-title {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-tertiary);
+}
+.gp-header-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.gp-btn-primary {
+  padding: 3px 10px;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.gp-btn-primary:hover { background: var(--accent-hover); box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+.gp-btn-danger {
+  background: transparent;
+  border: 1px solid var(--danger-border);
+  color: var(--danger-text);
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.gp-btn-danger:hover { background: var(--danger); color: #fff; }
+
+/* ── Inline input for new group name ────────────────────────── */
+.gp-inline-input {
+  display: flex;
+  gap: 4px;
+  padding: 6px 8px;
+  align-items: center;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+}
+.gp-rename-input {
+  flex: 1;
+  background: var(--bg-input-focus);
+  border: 1px solid var(--accent);
+  color: var(--text-primary);
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  outline: none;
+  font-family: inherit;
+}
+.gp-rename-input:focus {
+  box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.2);
+}
+.gp-inline-ok {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.gp-inline-ok:hover { background: var(--accent-hover); }
+.gp-inline-cancel {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.gp-inline-cancel:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+/* ── Group list ────────────────────────────────────────────── */
+.gp-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ── Caret ─────────────────────────────────────────────────── */
+.gp-caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  color: var(--text-dim);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+  user-select: none;
+}
+.gp-caret.open { transform: rotate(90deg); }
+
+/* ── Checkbox ──────────────────────────────────────────────── */
+.gp-cb {
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+  width: 15px;
+  height: 15px;
+}
+
+/* ── Group nodes ───────────────────────────────────────────── */
+.gp-group { border-bottom: 1px solid var(--bg-separator); }
+.gp-group.inactive { opacity: 0.5; }
+.gp-group.inactive .gp-group-name { text-decoration: line-through; color: var(--text-faint); }
+.gp-group-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.gp-group-row:hover { background: var(--bg-hover); }
+.gp-group-row:hover .gp-group-actions { opacity: 1; }
+.gp-group-row:hover .gp-x { opacity: 1; }
+.gp-group-row:hover .gp-icon-btn { opacity: 0.7; }
+.gp-group-icon { font-size: 14px; flex-shrink: 0; }
+.gp-group-name {
+  flex: 1;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gp-rename {
+  flex: 1;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent);
+  color: var(--text-primary);
+  padding: 1px 4px;
+  font-size: 13px;
+  border-radius: 2px;
+  outline: none;
+  font-family: inherit;
+}
+.gp-group-count {
+  color: var(--text-faint);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.gp-group-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.gp-group-children { padding-left: 16px; }
+
+/* ── Remove / action buttons ───────────────────────────────── */
+.gp-x {
+  background: none;
+  border: none;
+  color: var(--text-disabled);
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 13px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.gp-x.sm { font-size: 11px; }
+.gp-x:hover { color: var(--danger); }
+.gp-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 3px;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.gp-icon-btn:hover { opacity: 1 !important; }
+
+/* ── Group file sections ───────────────────────────────────── */
+.gp-gf-section { margin-bottom: 2px; }
+.gp-gf-label {
+  display: flex;
+  align-items: center;
+  padding: 2px 8px;
+  gap: 4px;
+}
+.gp-gf-label:hover .gp-x { opacity: 1; }
+.gp-gf-name {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Channel rows ──────────────────────────────────────────── */
+.gp-channel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  user-select: none;
+  border-radius: 3px;
+  margin: 1px 0;
+}
+.gp-channel:hover { background: var(--bg-input); }
+.gp-channel:hover .gp-x { opacity: 1; }
+.gp-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-swatch-border);
+}
+.gp-ch-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.gp-ch-unit {
+  color: var(--text-dim);
+  font-size: 11px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.gp-ch-pts {
+  color: var(--text-faint);
+  font-size: 10px;
+  flex-shrink: 0;
+  padding: 1px 5px;
+  background: var(--bg-subtle);
+  border-radius: 3px;
+  margin-left: auto;
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.gp-empty {
+  padding: 12px;
+  text-align: center;
+  color: var(--text-disabled);
+  font-size: 12px;
+  font-style: italic;
+}

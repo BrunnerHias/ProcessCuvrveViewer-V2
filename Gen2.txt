@@ -1,0 +1,575 @@
+Konzept:
+
+Programmsprache: ENGLSICH
+
+
+Wir programmieren app welche folgendes funktionen hat.
+
+1. Daten import
+ - lese einzelne files ein (xml) bzw .zpg (.zpg ist wie ein zip zu behandeln, darin befindet sich das xml). (fortschrittsanzeige vom import)
+ - bzw gebe ich dir einen ordner und du nimmst alle darin enthaltenen xml und .zpg daten
+ - das ganze soll auch per drag and drop mit ordner bzw files funktionieren
+ - möglichkeit die liste importierte daten zu leeren (somit müssen auch die daten welche gruppen zugordnet sind entfernt werden)
+ - abbrechen button um einen laufenden import abzubrechen
+ 
+ Die Daten aus dem Import listest du in einem DatenPortal auf (Treeview). Gegliedert nach Dateinamen.
+ Im TreeView werden unter jeder Datei die Header Infos sowie die Kanäle gezeigt. Namen, Farben, Einheit sowie Eiheit der Kanäle sind je Knala im XML enthalten. Hier grob ein Beispiel
+ 
+
+ 
+ 
+ Detail Beschreibung der Kanäle:
+ yName: definiert den Namen der Y Achse
+ xName: definiert den Namen der xAchse
+ yUnit: definiert die Einheit der Y Achse
+ xUnit: definiert die Einheit der x Achse
+ isLineVisible: definiert die default sichtbarkeit der Linie vom Kanal
+ arePointsVisible: definiert die default sichtbarkeit der einzelnen punkte im plot
+ lineColor: definiert die farbe der linie im plot
+ 
+ 
+ jedem Kanal sind noch Grafische Elemente zugordnet. Hier gibt es <lines>, <windows> und <circels>
+ der aufbau ist wie folgt:
+ <lines> hier sind alle objekte drinnen welche zu den Linien gehören
+	<linegroup> definiert die unterschiedlichen Liniengruppen
+		<lines> array  der linien der jeweiligen gruppe
+			<line> die einzelnen linie mit start und endpunkt sowie Layer info
+ 
+ <windows> hier sind alle objekte drinnen welche zu den Linien gehören
+	<windowgroup> definiert die unterschiedlichen Liniengruppen
+		<windows> array  der linien der jeweiligen gruppe
+			<window> die einzelnen linie mit start und endpunkt sowie Layer info
+ 
+  <circels> hier sind alle objekte drinnen welche zu den Kreisen gehören
+	<circlegroup> definiert die unterschiedlichen Kreisgruppen
+		<circles> array  der kreisen der jeweiligen gruppe
+			<circle> die einzelnen Kreise mit start und endpunkt sowie Layer info
+ 
+ Gillt für Linine Kreise sowie Fenster: Beschreibung ist definiert durch die Gruppe + Linie (LineGroupDescription - LineDescription)
+ 
+ 
+ Datei1.xml
+	<header>
+		<machineDesc>PRE-AL for automated MCB assembly</machineDesc>
+		<machineShortDesc>P-MCB01</machineShortDesc>
+		<moduleDesc>Measuring mechanism</moduleDesc>
+		<moduleShortDesc>M21</moduleShortDesc>
+		<nameOfMeasurePoint>P2103_magnetic_trip_force_501_EH1</nameOfMeasurePoint>
+		<idString>ib_teile</idString>
+		<type>3</type>
+		<variant>130</variant>
+		<isIONIOClassificationOn>true</isIONIOClassificationOn>
+		<isMarked>true</isMarked>
+		<dataPossiblyIncorrect>false</dataPossiblyIncorrect>
+		<diagramTitle>Magnetic Trip Force Check 501 EH 1</diagramTitle>
+		<date>2025-10-03 11:10:28</date>
+	<curves>			
+		<curve>
+			<coordSystemMinX>-1.22000002</coordSystemMinX>
+			<coordSystemMaxX>1.12000000</coordSystemMaxX>
+			<coordSystemMinY>-0.10000000</coordSystemMinY>
+			<coordSystemMaxY>1.10000002</coordSystemMaxY>
+			<coordSystemMinZ>0.0</coordSystemMinZ>
+			<coordSystemMaxZ>1.0</coordSystemMaxZ>
+			<coordSystemOriginX>0.0</coordSystemOriginX>
+			<coordSystemOriginY>0.0</coordSystemOriginY>
+			<coordSystemOriginZ>0.0</coordSystemOriginZ>
+			<coordSystemColor>16711680</coordSystemColor>
+			<description>Knob Force</description>
+			<groupDescription/>
+			<xName>Position</xName>
+			<yName>Knob Force</yName>
+			<zName/>
+			<xUnit>mm</xUnit>
+			<yUnit>N</yUnit>
+			<zUnit/>
+			<xPrecision>8</xPrecision>
+			<yPrecision>8</yPrecision>
+			<zPrecision>3</zPrecision>
+			<pointsMarkWidth>1</pointsMarkWidth>
+			<xFormula>x</xFormula>
+			<yFormula>y</yFormula>
+			<zFormula>z</zFormula>
+			<lineColor>16711680</lineColor>
+			<pointsColor>0</pointsColor>
+			<lineThickness>2</lineThickness>
+			<lineStyle>1</lineStyle>
+			<isLineVisible>true</isLineVisible>
+			<arePointsVisible>true</arePointsVisible>
+				<lines>
+					<noOfPLCLineGroups>10</noOfPLCLineGroups>
+					<plc>
+						<linegroup>
+							<description>Evaluation Position 1</description>
+							<groupDescription/>
+							<color>8421504</color>
+							<thickness>1</thickness>
+							<style>1</style>
+							<noOfLines>1</noOfLines>
+							<lines>
+								<line>
+										<description/>
+										<start-point x="0.0"
+           											y="2.0"/>
+										<end-point x="0.0"
+         											y="2.0"/>
+										<layer>0</layer> 
+ 
+ 					<windows>
+						<noOfPLCWindowGroups>4</noOfPLCWindowGroups>
+						<plc>
+							<windowgroup>
+								<description>Schutzzone</description>
+								<groupDescription/>
+								<color>8190976</color>
+								<thickness>2</thickness>
+								<style>1</style>
+								<isFilled>false</isFilled>
+								<noOfWindows>1</noOfWindows>
+								<windows>
+									<window>
+										<description/>
+										<point1 x="-0.73840445"
+      											y="5000.0"/>
+										<point2 x="-0.50562286"
+      											y="-5000.0"/>
+										<layer>0</layer> 
+ 
+ 					<circles>
+						<noOfPLCCircleGroups>19</noOfPLCCircleGroups>
+						<plc>
+							<circlegroup>
+								<description/>
+								<groupDescription/>
+								<color>11815935</color>
+								<thickness>3</thickness>
+								<style>1</style>
+								<isFilled>false</isFilled>
+								<noOfCircles>1</noOfCircles>
+								<circles>
+									<circle>
+										<description>&lt;b&gt;T (Search): 0,0498Nm&lt;/b&gt;&lt;br&gt;abs(-69,41° / 0,0498Nm)&lt;br&gt;&lt;br&gt;T- (Search): -1Nm&lt;br&gt;T+ (Search): 2,7Nm</description>
+										<center-point x="-69.410"
+            											y="0.049"/>
+										<radius>5.0</radius>
+										<layer>0</layer>
+
+
+Weiters sind in der Datei noch Soll und Istwert Listen enthalten welche wir später brauchen:
+setValues: array mit allen set values
+setValue: einzelner set value (mit zusatz infos welche wir später ebenfalls brauchen, description, value, unit, backColorDescription, textColorDescription)
+
+
+			<setValues>
+				<noOfPLCsetValues>71</noOfPLCsetValues>
+				<plc>
+					<setValue>
+						<description>Aufzeichnungsintervall X</description>
+						<status>0</status>
+						<value>0.0</value>
+						<dataType>4</dataType>
+						<unit>mm</unit>
+						<precision>2</precision>
+						<rowNumber>2</rowNumber>
+						<textColorDescription>1973790</textColorDescription>
+						<backColorDescription>16579781</backColorDescription>
+						<textColorUnit>1973790</textColorUnit>
+						<backColorUnit>16579781</backColorUnit>
+						<textColorValue>1973790</textColorValue>
+						<backColorValue>16579781</backColorValue>
+ 
+actualValues: array mit allen act values
+actualValue: einzelner act value (mit zusatz infos welche wir später ebenfalls brauchen, description, value, unit, backColorDescription, textColorDescription)
+
+
+			<actualValues>
+				<noOfPLCactualValues>40</noOfPLCactualValues>
+				<plc>
+					<actualValue>
+						<description>Gesamt Ergebnis</description>
+						<status>0</status>
+						<value>IO</value>
+						<dataType>3</dataType>
+						<unit/>
+						<precision>1</precision>
+						<rowNumber>1</rowNumber>
+						<textColorDescription>1973790</textColorDescription>
+						<backColorDescription>718301</backColorDescription>
+						<textColorUnit>1973790</textColorUnit>
+						<backColorUnit>718301</backColorUnit>
+						<textColorValue>1973790</textColorValue>
+						<backColorValue>718301</backColorValue>
+ 
+ 
+2. Data Portal Funktion
+   Die eingelesene daten behälst du als xml (wir müssen später auf den inhalt zugreifen)
+   Direkt nach dem Import will ich die Daten Gruppieren können. Kleinste Basis ist hier der Kanal (welche X + Y Daten hat)
+   Zeige die Datei nach dem import expandiert im treeview (also grob so)
+   gib mir noch die möglichkeit zum sortieren der Daten liste: name, file date, import date,....
+     
+   
+   Datei1.xml
+	- Header (nicht expandiert)
+	- Kanal 1
+	- Kanal 2
+	-..
+   Datei2.xml
+	- Header (nicht expandiert)
+	- Kanal 1
+	- Kanal 2
+	-..	
+	
+   
+   Beispiel:
+   
+   Gruppe 1:
+   
+		- Datei1.xml
+			Kanal 1
+			Kanal 2
+		- Datei 2.xml
+			Kanal 1
+			Kanal 2
+		- ....
+		
+		
+		
+   Gruppe 2:
+		- Datei1.xml
+			Kanal 3
+			Kanal 4
+		- Datei 2.xml
+			Kanal 3
+			Kanal 4
+		- ....
+
+
+   Gruppe 3:
+		- Datei1.xml
+			Kanal 1
+
+		- Datei 2.xml
+			Kanal 1
+		- ....
+   
+
+Daten müssen so auch mehrfach in Gruppen verwendet werden können.
+Ich will auch einfach ganze files zu einer gruppe hinzufügen können bzw wieder entfernen.
+Filter um in den importieren daten besser zu suchen und eine größere menge an daten direkt in die gruppe zuzuordnen. (ich will hier was richtig intuitives, Header daten sollen zum filtern verwendet werden, lass mich hier nach allen vorhanden header infos filter (alle header fields bis auf <date> hier die liste der header filter (ich definiere die filter properties nicht, da diese ja dynamsich sind. du ermittelst diese einfach selber anhand der vorhandenen header daten), diesen haben wir ja seperat als time filter), multiselect + optional klartext + time range (von bis auf sekunden basis). als quick filter will ich auch nach dem Kanal namen filtern. stelle diese filter platzsparend nebeneinander dar). Anmerkung: Spaltenbreite vom Filter anhand vom darzustellenden Text selber ermitteln (maximalbreite vorsehen).
+
+Umbenennen der bestehenden Gruppen ist auch wirchtig (doppelklick und umbenennen button)
+Einfach enfernen oder umsortieren in andere Gruppen per Drag Drop
+
+zusätzlich hat jede gruppe eine Checkbox zum gesamten aktivieren / deaktivieren der gruppe incl sub kanäle
+
+
+Baue das ganze in einer Architektur welche auch mit einer grßen menge an Daten umgehen kann (große menge an files aber auch die größe der einzelnen daten)
+  
+										
+Jetzt Geht zur Plot Funktion:
+Das machen wir auf einem Eigent Tab "CurvePlot"
+
+
+Hier Zeigen wir jetzt alle Daten an welche wir im Portal definiert haben.
+=> Gruppen sowie ungruppierte Daten müssen im plot angezeigt werden können, das muss einfach selektierbar sein
+
+Anordnung Data Portal: 
+ linke Seite: filter + data tree
+ rechts oben: import und drop zone
+ rechts unten: group  panel
+
+
+
+
+
+
+
+Zum Diagramm:
+Gemeinsame Y Achsen (legst du direkt zusammen, gemeinsamkeit wird über die <description> vom Kanal definiert.
+Wenn mehere X Achsen vorhanden sind wird die sichtbarkein über ein ENUM umgeschaltet (im ENUM sehe ich dann die verfügbaren X Achsen definiert im Kanal unter <xName>)
+alternierend werden die Korrekten Daten welche der jeweiligen X Achse zugeordnet sind angezeigt. (inkl der zugeordneten grafischen elemente (linien, kreisem fenster))
+
+
+Der sichtbereich (Zoom level) ist in den einzelnen Kanälen definiert und muss berücksichtigt werden:
+Werden mehere Kanäle auf einer Y bzw X Achse gemeinsam dargestellt müssen die Min MAx Werte aggregiert werden.
+			<coordSystemMinX>-1.22000002</coordSystemMinX>
+			<coordSystemMaxX>1.12000000</coordSystemMaxX>
+			<coordSystemMinY>-0.10000000</coordSystemMinY>
+			<coordSystemMaxY>1.10000002</coordSystemMaxY>
+			
+
+
+Der ganze Plot muss extrem performant aufgbaut sein und muss mit extremen Datenmengen umgehen können! 
+=> Viele Punkte 
+=> Viele Kanäle
+=> Viele Grafische Elemente
+
+Tooltip Beschriftung der Grafischen Elemente. (3Fenster, Linien, Kreise)
+
+Ein Aus Schaltbares Fenster welcher die Daten der Mausposition zeigt.
+=> Mauspositon => daten aller Kanäle bei aktueller position
+
+
+Zentrale Einstellung über welche ich die Grafischen elemente im Plot (Fenster Linine Kreise) sichtbar / unsichtbar schalten kann.
+=> Settings => Graphical Elements =>
+									Visible / Invisible (all elements)
+											Visible / Invisible (Lines)
+											Visible / Invisible (Windows)											
+											Visible / Invisible (Circels)		
+
+			=> Show Points (Visible / Invisible) (Rohdatenpunkte ein ausblenden)
+
+unterhalb der x Achse sehe ich quasi eine zusammenfassung der Kanäle (alle Kanäle mit identer <description> werde her als einzelner punkt aufgeführt, durch klick darauf kann ich alle gleichen Kanäle gesammelt ein /aus blenden, inclusive zugeordneter grafischen elemente (linien, fenster, kreise))
+
+
+Verwende fertige Plot Bibliotheken welche meine funktionen unterstützen! (plotly, grafana, highCharts,....)
+=> wähle hier das performanteste aus welche mein feature set unterstützt (Achtung performant bei extrem vielen Daten)
+
+Weiter brauche ich eine Legende neben dem Plot welche mir die aktiven Daten Zeigt.
+=> Eigentlich ist es die Information aus dem tree view + gruppen editor mit zusatz infos. nicht enthaltene Daten will ich hier nicht sehen.
+=> bei mouse over in der Legende auf die Datei bzw Kanal werden die Kanäle hervorgehoben sofern die möglich ist.
+
+Also die Gruppen incl deren enthaltenen Daten.
+Ungruppierte Daten, also jene daten welche im tree view selektiert sind
+
+Struktur:
+Groups:
+ Group 1:
+	Dataset1.xml
+		- Kanal 1
+			- Windows
+				- Window Group 1
+					- Window 1
+					-...
+				- Window Group 2
+					- Window 1
+					-...	
+			- Lines
+				- Line Group 1
+					- Line 1
+					-...
+				- Line Group 2
+					- Line 1
+					-...		
+			- Circles
+				- Circle Group 1
+					- Circle 1
+					-...
+				- Circle Group 2
+					- Circle 1
+					-...						
+		- Kanal 2
+			- Windows
+				- Window Group 1
+					- Window 1
+					-...
+				- Window Group 2
+					- Window 1
+					-...	
+			- Lines
+				- Line Group 1
+					- Line 1
+					-...
+				- Line Group 2
+					- Line 1
+					-...		
+			- Circles
+				- Circle Group 1
+					- Circle 1
+					-...
+				- Circle Group 2
+					- Circle 1
+					-...
+
+
+ Group 2:
+	Dataset2.xml
+		- Kanal 1
+			- Windows
+				- Window Group 1
+					- Window 1
+					-...
+				- Window Group 2
+					- Window 1
+					-...	
+			- Lines
+				- Line Group 1
+					- Line 1
+					-...
+				- Line Group 2
+					- Line 1
+					-...		
+			- Circles
+				- Circle Group 1
+					- Circle 1
+					-...
+				- Circle Group 2
+					- Circle 1
+					-...						
+		- Kanal 2
+			- Windows
+				- Window Group 1
+					- Window 1
+					-...
+				- Window Group 2
+					- Window 1
+					-...	
+			- Lines
+				- Line Group 1
+					- Line 1
+					-...
+				- Line Group 2
+					- Line 1
+					-...		
+			- Circles
+				- Circle Group 1
+					- Circle 1
+					-...
+				- Circle Group 2
+					- Circle 1
+					-...
+
+ Ungrouped:
+	Dataset2.xml
+		- Kanal 1
+			- Windows
+				- Window Group 1
+					- Window 1
+					-...
+				- Window Group 2
+					- Window 1
+					-...	
+			- Lines
+				- Line Group 1
+					- Line 1
+					-...
+				- Line Group 2
+					- Line 1
+					-...		
+			- Circles
+				- Circle Group 1
+					- Circle 1
+					-...
+				- Circle Group 2
+					- Circle 1
+					-...						
+		- Kanal 2
+			- Windows
+				- Window Group 1
+					- Window 1
+					-...
+				- Window Group 2
+					- Window 1
+					-...	
+			- Lines
+				- Line Group 1
+					- Line 1
+					-...
+				- Line Group 2
+					- Line 1
+					-...		
+			- Circles
+				- Circle Group 1
+					- Circle 1
+					-...
+				- Circle Group 2
+					- Circle 1
+					-...
+
+
+Zusatzinfo: Nachdem Daten / Kanäle mehrfach in Gruppen, bzw ungrupiert vorhanden sein können. eine Änderung sichtbar unsichtbar hat nur auf diejeweilige gruppe bzw ungruppierte datei Auswirkung.
+=> Durch klick in der Legende (im Plot Tab kann ich kanäle sichtbar / unsichtbar schalten)
+
+Zoomen: Zoomen per Fenster Zoom, Mausrad, pinch to zoom. überlege dir eine wirklcih intuitive Plot steuerung zum zoomen und auch wieder auf die verherige zoomstufe zurückzukommen wöre cool. (optional: zoomeinstellung merken um schnell wieder auf eine definierte ansicht zu kommen)
+
+
+Es muss möglich sein den Plot View in der Ansicht wie er im Tab sichtbar ist sauber als PDF zu exportieren, sofern die umsetzung möglich ist.
+
+
+
+Zustzfunktion: Vermessen
+Ich will im Plot mittels Cursor (anzahl frei definierbar) vermessen
+=> Cursor Position (croshair) zeigt Position crosshair (frei positionierbar bzw anheftend auf definierbaren kanal => umschaltbar)
+bei anheftend folgt der cursor mittelpunkt dann beim bewegen den jeweiligen kanal 
+
+
+Tabelle mit Set und Act Values:
+Set und Act Value Tabelle nutzen gemeinsam die Bildschirmbreite. (Jede Tabelle bekommt horizontal also 50%)
+sind viele Daten vorhanden sind die beiden Tabellen in sich horizontal scrollbar.
+In der Zeile liefert die description vom Act bzw Set Value die Beschriftung. (Status 0 = OK farbe wie definiert, Status 2 = NOK, Value Text dick gedruckt )
+Im Header liefert der idString der Datei die Beschriftung. (Background rot wenn Teil NOK => isMarkt aus dem Header der Datei)
+Bei scrollen (vertiakl / Horizontal) der jeweiligen Tabelle sind Description sowie Header stick und müssen sichtbar bleiben.
+Weiters sind Act und Set Value Tabelle beim horizontalen scrollen "synchronisiert" ich sehe also immer die Spalten der selben Datei. (Achtung bei der Spaltenbreite)
+Spaltenbreite muss per Drag veränderbar sein (Description-Spalte und jede Datei-Spalte individuell).
+Zu breiter Text (Descriptions, Werte, Header) wird per Zeilenumbruch dargestellt — nicht abgeschnitten. Gilt für UI-Darstellung UND PDF-Export.
+=> Status: Umgesetzt (Zeilenumbruch + individuelle Spaltenbreiten + PDF-Wrapping)
+
+
+Tabelle Beispiel
+								<idString>
+Set Value 1 <description>:
+Set Value 2 <description>:
+Set Value 3 <description>:
+
+Beim Klick auf die jeweilige Zeile zeig mir den Verlauf aller Daten welche im Plot visualisiert sind. (Messwertverlauf der jeweiligen Zeile + Verteilung)
+=>
+=> Ausser du hast hier noch bessere Ideen
+
+
+Weiters will ich meine Daten welche ich im Plot darstelle später mit Post Process auswertungen bewerten!
+=> am besten ein interface wo ich direkt die auswertungen laden frei konfigurieren kann. (Node Red oder ähnliches)
+
+Jede Auswertung liefert dann eine Rückgabe (Result) sowie Optional zusätzliche Messwerte
+
+Sollwerte welche diese Auswertung deifinieren sowie Results zeige in einer eigenen Tabelle mit selben funktionen wie die Act Set Value Tabelle von oben
+
+
+Zur Umsetzung:
+Setzte die Anwendung so performant wie nur möglich um.
+=> fürs erste ist es mal zeitrangig ob eigene app oder ob ich dass dann im Browser öffnen muss 
+
+
+Theming:
+Dark und Light Theme einstellbar über Toggle Button in der Tab-Leiste.
+=> Durchgängig über alle Bereiche: Data Portal, CurvePlot, Value Tables
+=> CSS-Variablen-basiert ([data-theme="dark"] / [data-theme="light"])
+=> Einstellung wird in localStorage persistiert
+=> ECharts Farben werden über useThemeColors Hook synchronisiert
+=> Status: Umgesetzt
+
+Performance-Optimierungen CurvePlot:
+Der Plot war selbst mit wenigen Kurven stark verlangsamt, da ECharts bei jedem State-Change
+disposed und komplett neu initialisiert wurde. Folgende Maßnahmen wurden umgesetzt:
+=> Chart-Instanz wird nur EINMAL erstellt (init-Effect), Option-Updates via setOption() (KEIN dispose/re-init!)
+=> useDirtyRect: true — Canvas rendert nur geänderte Bildbereiche statt Fullframe-Redraw
+=> progressive: 400 / progressiveThreshold: 3000 — große Serien werden in Chunks über mehrere Frames gerendert
+=> notMerge: true + lazyUpdate: true — effizientes Option-Merging ohne unnötige Diffing-Zyklen
+=> Stabile Event-Handler via useRef — keine Re-Registrierung bei jedem Render
+=> Visibility-Lookup O(1) via Map statt O(n) Array.find()
+=> Mousemove-Handler gedrosselt auf 50ms Intervall (performance.now())
+=> Daten-Arrays pre-alloziert (new Array(len)) statt push-Loop
+=> Redundantes doppeltes LTTB-Sampling entfernt (manuell + ECharts built-in war doppelt)
+=> Tooltip showDelay: 50ms zur Reduktion der Berechnungsfrequenz
+=> ResizeObserver mit stabilen Refs, wird nicht bei jedem Option-Change neu registriert
+=> LTTB Threshold erhöht auf 8000 Punkte (von 5000) für bessere visuelle Qualität
+=> Status: Umgesetzt
+
+
+ValueTables — Sticky Description Header + Value Detail Modal:
+=> Description-Header sticky bei vertikalem UND horizontalem Scrollen (position: sticky top+left, z-index 5)
+=> File-Header-Zeile sticky top mit solidem Background (kein backdrop-filter, da das Probleme macht)
+=> Klick auf Description-Zelle öffnet modales Fenster (ValueDetailModal):
+   - Trend-Chart: Linie+Scatter über alle importierten Dateien, Mean-Markierungslinie,
+     Tooltip zeigt vollständige Header-Info (Maschine, Modul, Messpunkt, Datum, Status OK/NOK)
+   - Histogramm: Verteilungs-Balkendiagramm mit automatischem Binning, Gradient-Balken
+   - Statistik-Strip: Count, Min, Max, Mean, Std Dev
+   - Design: Glassmorphism-Modal passend zum App-Design, ESC zum Schließen
+   - Nur bei numerischen Werten werden Charts gezeigt, Text-Werte zeigen Info
+=> Status: Umgesetzt
+
+
+
+
+
+
+
