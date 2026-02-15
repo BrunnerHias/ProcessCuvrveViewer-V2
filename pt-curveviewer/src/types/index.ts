@@ -209,6 +209,8 @@ export type SnapYStrategy = 'ymax' | 'ymin';
 export interface CursorState {
   id: string;
   xPosition: number;
+  yPosition?: number;           // Y data-value in free mode
+  freeYAxisIndex?: number;       // which yAxisIndex was used for conversion
   mode: 'free' | 'snap';
   snapFileId?: string;
   snapChannelId?: string;

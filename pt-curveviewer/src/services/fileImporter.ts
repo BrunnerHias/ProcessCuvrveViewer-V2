@@ -229,21 +229,30 @@ export function getDroppedPaths(dataTransfer: DataTransfer): string[] {
   if (!api) return [];
   const paths: string[] = [];
   if (dataTransfer.files) {
+    console.log('[fileImporter] dataTransfer.files.length:', dataTransfer.files.length);
     for (let i = 0; i < dataTransfer.files.length; i++) {
       try {
-        const p = api.getPathForFile(dataTransfer.files[i]);
+        const f = dataTransfer.files[i];
+        const p = api.getPathForFile(f);
+        console.log(`[fileImporter]  [${i}] name="${f.name}" size=${f.size} type="${f.type}" → path="${p}"`);
         if (p) paths.push(p);
       } catch (err) {
-        console.warn('[fileImporter] getPathForFile failed for', dataTransfer.files[i].name, err);
+        console.warn('[fileImporter] getPathForFile failed for index', i, dataTransfer.files[i]?.name, err);
       }
     }
   }
+  console.log('[fileImporter] getDroppedPaths result:', paths.length, 'path(s)');
   return paths;
 }
 
 /**
  * In Electron: process dropped paths (files and/or folders).
  * Uses Node.js via IPC to recursively read directories.
+ *
+ * When individual files are dropped, Windows may truncate the list
+ * (CF_HDROP clipboard buffer limit). To compensate, we detect the
+ * parent directories of the dropped files and scan them fully so no
+ * files are silently lost.
  */
 export async function processDroppedPaths(
   paths: string[],
@@ -255,23 +264,54 @@ export async function processDroppedPaths(
   if (!api) throw new Error('Not running in Electron');
 
   // 1. Expand directories into file lists
-  const allFilePaths: string[] = [];
+  const filePathSet = new Set<string>();
+  const scannedDirs = new Set<string>();
+
   for (const p of paths) {
     if (signal?.aborted) break;
     const isDir = await api.isDirectory(p);
+    console.log(`[fileImporter] path="${p}" isDir=${isDir}`);
     if (isDir) {
+      scannedDirs.add(p);
       const dirFiles = await api.readDirectory(p);
+      console.log(`[fileImporter]   → readDirectory found ${dirFiles.length} file(s)`);
       for (const f of dirFiles) {
-        allFilePaths.push(f.path);
+        filePathSet.add(f.path);
       }
     } else {
       const name = p.split(/[\\/]/).pop() || p;
       if (isXmlFile(name) || isZpgFile(name)) {
-        allFilePaths.push(p);
+        filePathSet.add(p);
       }
     }
   }
 
+  // 2. Back-fill: Windows drag & drop may truncate the file list when many
+  //    files are selected.  For each parent directory that contributed files
+  //    (but was NOT already scanned as a directory drop), scan it fully to
+  //    recover any missing siblings.
+  const parentDirs = new Set<string>();
+  for (const fp of filePathSet) {
+    const sep = fp.lastIndexOf('\\') !== -1 ? fp.lastIndexOf('\\') : fp.lastIndexOf('/');
+    if (sep > 0) parentDirs.add(fp.substring(0, sep));
+  }
+  for (const dir of parentDirs) {
+    if (scannedDirs.has(dir)) continue; // already fully scanned
+    try {
+      // readDirectory is recursive, but we only want immediate siblings.
+      // However, using it is safe — it only picks up xml/zpg files.
+      const dirFiles = await api.readDirectory(dir);
+      for (const f of dirFiles) {
+        filePathSet.add(f.path);
+      }
+      scannedDirs.add(dir);
+    } catch {
+      // ignore — directory may not exist or be unreadable
+    }
+  }
+
+  const allFilePaths = Array.from(filePathSet);
+  console.log(`[fileImporter] processDroppedPaths: ${paths.length} input path(s) → ${allFilePaths.length} file(s) after scanning + back-fill`);
   if (allFilePaths.length === 0) return [];
 
   const total = allFilePaths.length;

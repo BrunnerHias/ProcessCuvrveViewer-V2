@@ -74,6 +74,8 @@ export const FileImport: React.FC = () => {
     async (e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
+      // Mark the native event so the global App.tsx handler knows we handled it
+      e.nativeEvent.stopImmediatePropagation();
       setIsDragOver(false);
 
       const ac = new AbortController();

@@ -4,6 +4,9 @@
 
 import React, { useState, useCallback, useEffect, useRef, Suspense, lazy } from 'react';
 import { useSettingsStore } from './stores/settingsStore';
+import { useFileStore } from './stores/fileStore';
+import { isElectron, getDroppedPaths, processDroppedPaths, captureDroppedEntries, captureDroppedFiles, readFilesFromEntries, hasDirectoryEntries, processFiles } from './services/fileImporter';
+import type { ImportProgress } from './services/fileImporter';
 import './App.css';
 
 // Lazy load to isolate import errors
@@ -92,15 +95,113 @@ const App: React.FC = () => {
   }, []);
 
   // Auto-switch to Data Portal tab when dragging files into the app window
+  // AND make the entire window a valid drop target so no data is lost
+  const addFiles = useFileStore((s) => s.addFiles);
+  const setImportLoading = useFileStore((s) => s.setLoading);
+  const setImportProgress = useFileStore((s) => s.setProgress);
+  const globalAbortRef = useRef<AbortController | null>(null);
+
+  const onImportProgress = useCallback(
+    (p: ImportProgress) => {
+      setImportProgress(p.current, p.total, `${p.current} / ${p.total}  —  ${p.filename}`);
+    },
+    [setImportProgress],
+  );
+
   useEffect(() => {
     const handleDragEnter = (e: DragEvent) => {
       if (e.dataTransfer?.types?.includes('Files')) {
         switchTab('portal');
       }
     };
+    // CRITICAL: prevent default on dragover so the entire window is a valid drop target.
+    // Without this, Chrome/Electron invalidates the DataTransfer during dragging.
+    const handleDragOver = (e: DragEvent) => {
+      if (e.dataTransfer?.types?.includes('Files')) {
+        e.preventDefault();
+      }
+    };
+    // Global drop handler: catches drops anywhere in the window
+    // (the FileImport drop zone also handles drops, but only when the drop lands on it)
+    const handleGlobalDrop = async (e: DragEvent) => {
+      // If a component (like FileImport's drop zone) already handled this, skip
+      if (e.defaultPrevented) return;
+      if (!e.dataTransfer?.types?.includes('Files')) return;
+
+      e.preventDefault();
+
+      const ac = new AbortController();
+      globalAbortRef.current = ac;
+
+      if (isElectron()) {
+        const paths = getDroppedPaths(e.dataTransfer);
+        if (paths.length === 0) return;
+
+        setImportLoading(true, 'Scanning…');
+        try {
+          const imported = await processDroppedPaths(paths, onImportProgress, ac.signal, addFiles);
+          if (ac.signal.aborted) return;
+          setImportLoading(false, `${imported.length} file(s) imported`);
+          setTimeout(() => setImportLoading(false, ''), 2500);
+        } catch (err) {
+          if (ac.signal.aborted) return;
+          console.error('[App] Global drop error:', err);
+          setImportLoading(false, 'Import error');
+        } finally {
+          globalAbortRef.current = null;
+        }
+        return;
+      }
+
+      // Browser path
+      const entries = captureDroppedEntries(e.dataTransfer);
+      const droppedFolders = hasDirectoryEntries(e.dataTransfer);
+      const flatFiles = captureDroppedFiles(e.dataTransfer);
+
+      let files: File[];
+      if (entries && entries.length > 0) {
+        setImportLoading(true, 'Scanning folders…');
+        try {
+          files = await readFilesFromEntries(entries);
+        } catch {
+          files = flatFiles;
+        }
+      } else {
+        files = flatFiles;
+      }
+
+      if (files.length === 0 && droppedFolders) {
+        setImportLoading(false, 'Ordner-Drop auf file:// nicht möglich — bitte den 📂-Button verwenden');
+        setTimeout(() => setImportLoading(false, ''), 4000);
+        return;
+      }
+      if (files.length === 0) return;
+
+      setImportLoading(true, `0 / ${files.length}`);
+      setImportProgress(0, files.length);
+      try {
+        const imported = await processFiles(files, onImportProgress, ac.signal, addFiles);
+        if (ac.signal.aborted) return;
+        setImportLoading(false, `${imported.length} file(s) imported`);
+        setTimeout(() => setImportLoading(false, ''), 2500);
+      } catch (err) {
+        if (ac.signal.aborted) return;
+        console.error('[App] Global drop error:', err);
+        setImportLoading(false, 'Import error');
+      } finally {
+        globalAbortRef.current = null;
+      }
+    };
+
     window.addEventListener('dragenter', handleDragEnter);
-    return () => window.removeEventListener('dragenter', handleDragEnter);
-  }, [switchTab]);
+    window.addEventListener('dragover', handleDragOver);
+    window.addEventListener('drop', handleGlobalDrop);
+    return () => {
+      window.removeEventListener('dragenter', handleDragEnter);
+      window.removeEventListener('dragover', handleDragOver);
+      window.removeEventListener('drop', handleGlobalDrop);
+    };
+  }, [switchTab, addFiles, setImportLoading, setImportProgress, onImportProgress]);
 
   return (
     <ErrorBoundary>

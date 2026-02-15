@@ -687,15 +687,17 @@ export const CurvePlot: React.FC = () => {
         });
       }
 
+      const isFreeMode = cursor.mode === 'free';
       graphicElements.push({
         type: 'group',
         $cursor: true,
         $cursorId: cursor.id,
+        $cursorMode: cursor.mode,
         position: [px, 0],
         z: 200,
-        $data: { xPosition: cursor.xPosition, color: cursor.color },
-        draggable: 'horizontal' as const,
-        cursor: 'ew-resize',
+        $data: { xPosition: cursor.xPosition, color: cursor.color, yPosition: cursor.yPosition, freeYAxisIndex: cursor.freeYAxisIndex },
+        draggable: isFreeMode ? (true as const) : ('horizontal' as const),
+        cursor: isFreeMode ? 'move' : 'ew-resize',
         ondragstart: function () {
           cursorDragging.current = true;
           const chart = chartInstance.current;
@@ -713,10 +715,14 @@ export const CurvePlot: React.FC = () => {
             let dataX = chart.convertFromPixel({ xAxisIndex: 0 }, this.position[0]);
             if (dataX !== undefined && dataX !== null) {
               dataX = Number(dataX);
-              // In snap mode – cursor stays at the free X position,
-              // the snap dot will show the Y on the selected channel.
-              // No X-snapping needed; the cursor X follows the mouse freely.
-              useSettingsStore.getState().updateCursorPosition(cursor.id, dataX);
+              if (isFreeMode) {
+                // Free mode: also convert Y pixel → data value (use first yAxis == 0)
+                const dataXY = chart.convertFromPixel({ xAxisIndex: 0, yAxisIndex: 0 }, [this.position[0], this.position[1]]);
+                const dataY = dataXY ? Number(dataXY[1]) : undefined;
+                useSettingsStore.getState().updateCursorPosition(cursor.id, dataX, dataY, 0);
+              } else {
+                useSettingsStore.getState().updateCursorPosition(cursor.id, dataX);
+              }
             }
           } catch { /* ignore */ }
         },
@@ -727,7 +733,13 @@ export const CurvePlot: React.FC = () => {
             let dataX = chart.convertFromPixel({ xAxisIndex: 0 }, this.position[0]);
             if (dataX !== undefined && dataX !== null) {
               dataX = Number(dataX);
-              useSettingsStore.getState().updateCursorPosition(cursor.id, dataX);
+              if (isFreeMode) {
+                const dataXY = chart.convertFromPixel({ xAxisIndex: 0, yAxisIndex: 0 }, [this.position[0], this.position[1]]);
+                const dataY = dataXY ? Number(dataXY[1]) : undefined;
+                useSettingsStore.getState().updateCursorPosition(cursor.id, dataX, dataY, 0);
+              } else {
+                useSettingsStore.getState().updateCursorPosition(cursor.id, dataX);
+              }
             }
           } catch { /* ignore */ }
           cursorDragging.current = false;
@@ -780,8 +792,12 @@ export const CurvePlot: React.FC = () => {
             },
           });
         }
+      } else if (cursor.mode === 'free' && cursor.yPosition !== undefined) {
+        // Free mode with stored Y position: use the user-placed Y value
+        crosshairY = cursor.yPosition;
+        crosshairYAxisIndex = cursor.freeYAxisIndex ?? 0;
       } else if (filteredChannels.length > 0) {
-        // Free mode: pick the first channel's Y for the horizontal crosshair
+        // Free mode without a stored Y: pick the first channel's Y for the horizontal crosshair
         const firstCh = filteredChannels[0];
         const fOff = syncOffsets[firstCh.file.id] || 0;
         const rawX = cursor.xPosition - fOff;
@@ -948,26 +964,39 @@ export const CurvePlot: React.FC = () => {
     const updatedGraphics = graphics.map((g) => {
       // Handle cursor groups (vertical line + crosshair ticks)
       if (g.$cursor) {
-        const data = g.$data as { xPosition: number } | undefined;
+        const data = g.$data as { xPosition: number; yPosition?: number; freeYAxisIndex?: number } | undefined;
         if (!data) return g;
+        const isFree = g.$cursorMode === 'free';
         try {
           const px = chart.convertToPixel({ xAxisIndex: 0 }, data.xPosition);
           if (px !== undefined) {
+            // In free mode with a stored yPosition, compute the Y pixel for the group
+            let groupYPx = 0;
+            if (isFree && data.yPosition !== undefined) {
+              try {
+                const xyPx = chart.convertToPixel(
+                  { xAxisIndex: 0, yAxisIndex: data.freeYAxisIndex ?? 0 },
+                  [data.xPosition, data.yPosition]
+                );
+                if (xyPx) groupYPx = xyPx[1];
+              } catch { /* ignore */ }
+            }
             // Update position of the group
-            const updated: Record<string, unknown> = { ...g, position: [px, 0] };
+            const updated: Record<string, unknown> = { ...g, position: [px, groupYPx] };
 
             // Update children: resize hit-area and line to current chart height,
-            // and position crosshair ticks at the correct Y pixels
+            // and position crosshair ticks at the correct Y pixels.
+            // When groupYPx != 0 (free mode), children must compensate with -groupYPx offsets.
             const children = (g.children as Array<Record<string, unknown>>);
             if (children) {
               updated.children = children.map((child: Record<string, unknown>) => {
                 // Hit-area rect
                 if (child.type === 'rect') {
-                  return { ...child, shape: { x: -10, y: 0, width: 20, height: chartHeight } };
+                  return { ...child, shape: { x: -10, y: -groupYPx, width: 20, height: chartHeight } };
                 }
                 // Vertical cursor line
                 if (child.type === 'line' && !child.$cursorTick) {
-                  return { ...child, shape: { x1: 0, y1: 0, x2: 0, y2: chartHeight } };
+                  return { ...child, shape: { x1: 0, y1: -groupYPx, x2: 0, y2: chartHeight - groupYPx } };
                 }
                 // Crosshair tick lines + dots — position at Y pixel
                 if (child.$cursorTick) {
@@ -979,7 +1008,7 @@ export const CurvePlot: React.FC = () => {
                       [td.cx, td.cy]
                     );
                     if (pixel) {
-                      const yPx = pixel[1]; // Y pixel relative to canvas
+                      const yPx = pixel[1] - groupYPx; // Y pixel relative to group
                       if (child.type === 'circle') {
                         return { ...child, position: [0, yPx] };
                       }

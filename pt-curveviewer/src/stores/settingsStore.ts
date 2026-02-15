@@ -41,7 +41,7 @@ interface SettingsStoreState {
   // Cursor management
   addCursor: (snapFileId?: string, snapChannelId?: string) => void;
   removeCursor: (id: string) => void;
-  updateCursorPosition: (id: string, xPosition: number) => void;
+  updateCursorPosition: (id: string, xPosition: number, yPosition?: number, freeYAxisIndex?: number) => void;
   setCursorMode: (id: string, mode: 'free' | 'snap', snapFileId?: string, snapChannelId?: string) => void;
   setCursorSnapYStrategy: (id: string, strategy: SnapYStrategy) => void;
   setCursorShowAllFiles: (id: string, showAll: boolean) => void;
@@ -339,11 +339,17 @@ export const useSettingsStore = create<SettingsStoreState>((set, get) => ({
       plotSettings: { ...state.plotSettings, cursors: state.plotSettings.cursors.filter((c) => c.id !== id) },
     })),
 
-  updateCursorPosition: (id, xPosition) =>
+  updateCursorPosition: (id, xPosition, yPosition?, freeYAxisIndex?) =>
     set((state) => ({
       plotSettings: {
         ...state.plotSettings,
-        cursors: state.plotSettings.cursors.map((c) => (c.id === id ? { ...c, xPosition } : c)),
+        cursors: state.plotSettings.cursors.map((c) => {
+          if (c.id !== id) return c;
+          const upd: typeof c = { ...c, xPosition };
+          if (yPosition !== undefined) upd.yPosition = yPosition;
+          if (freeYAxisIndex !== undefined) upd.freeYAxisIndex = freeYAxisIndex;
+          return upd;
+        }),
       },
     })),
 

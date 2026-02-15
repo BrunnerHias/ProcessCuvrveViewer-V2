@@ -284,7 +284,6 @@ export const ValueDetailModal: React.FC<ValueDetailModalProps> = ({
         itemSize: 14,
         feature: {
           dataZoom: {
-            yAxisIndex: 'none',
             title: { zoom: 'Box Zoom', back: 'Zoom Back' },
           },
           restore: { title: 'Reset' },
@@ -371,10 +370,12 @@ export const ValueDetailModal: React.FC<ValueDetailModalProps> = ({
           data: seriesData as unknown as echarts.LineSeriesOption['data'],
           smooth: 0.3,
           symbol: 'circle',
-          symbolSize: 10,
+          symbolSize: dataPoints.length > 200 ? 4 : dataPoints.length > 80 ? 6 : 10,
+          showAllSymbol: true,
+          sampling: undefined,
           lineStyle: {
             color: '#4fc3f7',
-            width: 2,
+            width: dataPoints.length > 200 ? 1 : 2,
             opacity: 0.7,
           },
           emphasis: {
